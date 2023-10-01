@@ -75,7 +75,7 @@ async function movieFetchAPI(endpoint) {
   showSpinner();
 
   const response = await fetch(
-    `${API_URL}/${endpoint}?api_key=${API_KEY}&language=en-US`
+    `${API_URL}/${endpoint}?api_key=${API_KEY}&language=en-US`,
   );
 
   const data = await response.json();
@@ -144,7 +144,6 @@ async function displayPopularTvShows() {
   const { results } = await movieFetchAPI('tv/popular');
 
   results.forEach((show) => {
-    console.log(show);
     const div = document.createElement('div');
     div.classList.add('card');
 
