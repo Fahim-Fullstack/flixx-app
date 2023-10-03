@@ -14,15 +14,19 @@ const global = {
 
 //Search Movies/Shows
 async function search() {
-  //get the query string --everythings from question mark
+  //get the query string --everything from question mark
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
+
   global.search.type = urlParams.get('type');
   global.search.term = urlParams.get('search-term');
 
   if (global.search.term !== '' && global.search.term !== null) {
-    // @todo - make request and display results
-    alert('Please enter a serch term');
+    // make request and display results
+    const results = await searchAPIData();
+    console.log(results);
+  } else {
+    showAlert('Please enter a search term');
   }
 }
 
@@ -76,14 +80,11 @@ function initSwiper() {
 //Display movie details
 async function displayMovieDetails() {
   const movieId = window.location.search.split('=')[1];
-
   const movie = await movieFetchAPI(`movie/${movieId}`);
-
   const div = document.createElement('div');
 
   //Overlay for background Image
   displayBackgroundImage('movie', movie.backdrop_path);
-
   div.innerHTML = `<div class="details-top">
   <div>
   ${
@@ -144,9 +145,7 @@ alt= "${movie.title}"
 //Display tv show details
 async function displayShowDetails() {
   const showId = window.location.search.split('=')[1];
-
   const show = await movieFetchAPI(`tv/${showId}`);
-
   const div = document.createElement('div');
 
   //Overlay for background Image
@@ -266,6 +265,16 @@ function highlightActiveLink() {
       link.classList.add('active');
     }
   });
+}
+
+// Show Error Alert
+function showAlert(message, className) {
+  const alertEl = document.createElement('div');
+  alertEl.classList.add('alert', className);
+  alertEl.appendChild(document.createTextNode(message));
+  document.querySelector('#alert').appendChild(alertEl);
+
+  setTimeout(() => alertEl.remove(), 3000);
 }
 
 //popular movie display
