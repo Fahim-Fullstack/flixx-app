@@ -9,6 +9,7 @@ const global = {
     type: '',
     page: 1,
     totalPages: 1,
+    totalResults: 0,
   },
   api: {
     apiKey: '45c41cb96c4d1498cd76590887b34078',
@@ -27,11 +28,17 @@ async function search() {
 
   if (global.search.term !== '' && global.search.term !== null) {
     // make request and display results
-    const { results, total_pages, page } = await searchApiData();
+    const { results, total_pages, page, total_results } = await searchApiData();
+
+    global.search.page = page;
+    global.search.totalPages = total_pages;
+    global.search.totalResults = total_results;
 
     if (results.length === 0) {
       showAlert('No results found');
       return;
+    } else {
+      showAlert('Please');
     }
 
     displaySearchResults(results);
@@ -45,6 +52,7 @@ async function search() {
 //Display Search Results
 function displaySearchResults(results) {
   results.forEach((result) => {
+    console.log(result);
     const div = document.createElement('div');
     div.classList.add('card');
 
@@ -52,7 +60,7 @@ function displaySearchResults(results) {
       result.id
     }">
     ${
-      show.poster_path
+      result.poster_path
         ? `<img
     src="https://image.tmdb.org/t/p/w500/${result.poster_path}"
     class="card-img-top"
@@ -77,6 +85,10 @@ function displaySearchResults(results) {
       }</small>
     </p>
   </div>`;
+
+    document.querySelector(
+      '#search-results-heading'
+    ).innerHTML = `<h2>${results.length} of ${global.search.totalResults} Results for ${global.search.term}</h2>`;
 
     document.querySelector('#search-results').appendChild(div);
   });
